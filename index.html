@@ -1,1 +1,799 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSAG F&I Portal & Resource Directory</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef6ff',
+              100: '#d9eaff',
+              500: '#1d4ed8',
+              600: '#1e40af',
+              700: '#1d3557',
+              800: '#0f172a',
+              900: '#0a0f1d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #334155;
+    }
+  </style>
+</head>
+<body class="h-full bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col transition-colors duration-200">
 
+  <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 gap-4">
+        <!-- Logo & Title -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-md shadow-blue-500/20">
+            JS
+          </div>
+          <div>
+            <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+              JSAG F&I Portal
+              <span class="hidden sm:inline-flex text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">Directory</span>
+            </h1>
+            <p class="text-xs text-slate-500 dark:text-slate-400 hidden md:block">Protected operational files, desk aids, portals & training</p>
+          </div>
+        </div>
+
+        <!-- Header Actions: Favorites, Theme, Admin modal -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <!-- Favorite Filter Switch Button -->
+          <button id="favoriteFilterBtn" onclick="toggleFavoriteFilter()" title="Filter Bookmarked Favorites" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-semibold transition text-slate-600 dark:text-slate-300">
+            <svg class="w-4 h-4 text-amber-500 fill-transparent" id="favFilterIcon" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+            <span class="hidden xs:inline">Starred</span>
+            <span id="favCountBadge" class="ml-0.5 px-1.5 py-0.2 bg-slate-200 dark:bg-slate-700 rounded-full text-[10px]">0</span>
+          </button>
+
+          <!-- Help / Admin Modal Trigger -->
+          <button onclick="openModal('howToModal')" title="How to edit or add links" class="p-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </button>
+
+          <!-- Dark / Light Mode Toggle -->
+          <button id="themeToggleBtn" onclick="toggleDarkMode()" title="Toggle Dark/Light Mode" class="p-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition">
+            <svg id="sunIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="5"></circle>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+            </svg>
+            <svg id="moonIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+
+    <!-- Hero Card with Search -->
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-indigo-950 to-blue-900 text-white p-6 sm:p-8 shadow-xl">
+      <div class="absolute -right-16 -top-16 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      
+      <div class="relative z-10 max-w-2xl">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/10 text-blue-200 border border-white/10 mb-3">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Company Single Sign-On Active
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-white mb-2">
+          F&amp;I Master Resource Directory
+        </h2>
+        <p class="text-slate-300 text-sm leading-relaxed mb-6">
+          Direct, authenticated access to deal aids, submission templates, internal portals, and video procedures. Bookmark your daily tools for instant one-click launch.
+        </p>
+
+        <!-- Search Bar -->
+        <div class="relative flex items-center">
+          <svg class="absolute left-4 w-5 h-5 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+          <input 
+            type="text" 
+            id="searchInput" 
+            oninput="handleSearch(this.value)" 
+            placeholder="Search forms, lease aids, videos, portals (e.g., 'lease', 'unwind', 'wire', 'signnow')..." 
+            class="w-full pl-12 pr-10 py-3.5 bg-white/10 dark:bg-slate-900/60 border border-white/20 dark:border-slate-700/60 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white/20 transition text-sm shadow-inner"
+          >
+          <button 
+            id="clearSearchBtn" 
+            onclick="clearSearch()" 
+            class="hidden absolute right-3 p-1 rounded-md text-slate-400 hover:text-white transition"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+      <!-- Category Pills -->
+      <div class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1.5 sm:pb-0" id="categoryPillsContainer">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <!-- Live Count Stats -->
+      <div class="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-2 whitespace-nowrap self-end sm:self-auto">
+        <span>Showing <strong id="visibleCount" class="text-slate-800 dark:text-slate-100">0</strong> of <span id="totalCount">0</span> resources</span>
+      </div>
+    </div>
+
+    <div id="resourceGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- Injected dynamically via JS -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden flex-col items-center justify-center py-16 text-center">
+      <div class="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4 text-slate-400">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+      </div>
+      <h3 class="text-base font-bold text-slate-900 dark:text-white mb-1">No matching resources found</h3>
+      <p class="text-sm text-slate-500 dark:text-slate-400 max-w-sm mb-4">Try clearing your search query or selecting a different category filter.</p>
+      <button onclick="resetFilters()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow transition">
+        Reset All Filters
+      </button>
+    </div>
+
+  </main>
+
+  <footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-6 text-center text-xs text-slate-500 dark:text-slate-400">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p>JSAG Finance &amp; Insurance &bull; Internal Reference Portal</p>
+      <div class="flex items-center gap-4">
+        <a href="https://jsagfi.github.io/schedule/" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition">Schedule</a>
+        <span>&bull;</span>
+        <button onclick="openModal('howToModal')" class="hover:text-blue-600 transition">Admin / Edit Instructions</button>
+      </div>
+    </div>
+  </footer>
+
+  <div id="howToModal" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-8 space-y-5">
+      <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400 flex items-center justify-center font-bold">
+            i
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white">How to Maintain &amp; Update Links</h3>
+            <p class="text-xs text-slate-500">Zero database setup required &mdash; fully controlled in your repository</p>
+          </div>
+        </div>
+        <button onclick="closeModal('howToModal')" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-sm text-slate-600 dark:text-slate-300">
+        <div class="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200 text-xs">
+          <strong>OneDrive Link Notice:</strong> In this template, placeholders marked with <code>url: "#"</code> or commented with <code>// REPLACE_WITH_ONEDRIVE_LINK</code> are ready for your authentic company OneDrive sharing URLs.
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-900 dark:text-white mb-1">1. How to update a link or add a new form:</h4>
+          <ol class="list-decimal list-inside space-y-1.5 text-xs sm:text-sm pl-1">
+            <li>Open this <code class="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">index.html</code> in GitHub.</li>
+            <li>Click the pencil icon (<strong class="text-blue-600">Edit</strong>).</li>
+            <li>Scroll down to the <code>const RESOURCES = [...]</code> array in the JavaScript section.</li>
+            <li>Paste your direct OneDrive sharing URL into the corresponding <code>url: "https://..."</code> property.</li>
+            <li>Commit changes. GitHub Pages automatically rebuilds and refreshes your site in ~30 seconds.</li>
+          </ol>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-900 dark:text-white mb-1">2. Best Practice for OneDrive Links:</h4>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            In OneDrive, click <strong>Share &rarr; People in your organization with the link can view</strong>. This ensures users are prompted for company SSO without granting write/edit permissions to the original files.
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-3 flex justify-end">
+        <button onclick="closeModal('howToModal')" class="px-5 py-2.5 bg-slate-900 dark:bg-blue-600 hover:bg-slate-800 dark:hover:bg-blue-700 text-white text-xs font-semibold rounded-xl transition">
+          Got it
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xl text-xs font-semibold">
+    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+    </svg>
+    <span id="toastMessage">Link copied to clipboard!</span>
+  </div>
+
+  <script>
+    /**
+     * JSAG F&I Resource Data Source
+     * Paste your actual OneDrive URLs in place of the '#' placeholders.
+     */
+    const RESOURCES = [
+      {
+        id: 'fi-schedule',
+        title: 'F&I Schedule',
+        category: 'Team Admin & Tools',
+        type: 'Web App',
+        desc: 'Live master dealership F&I department coverage and shift roster.',
+        url: 'https://jsagfi.github.io/schedule/',
+        isPlaceholder: false
+      },
+      {
+        id: 'missing-docs',
+        title: 'Missing Docs List',
+        category: 'Team Admin & Tools',
+        type: 'Excel',
+        desc: 'Active tracking sheet for outstanding lender stipulations and contract docs.',
+        // REPLACE_WITH_ONEDRIVE_LINK: OneDrive link to 'Missing Doc Submission 1.xlsx'
+        url: 'https://jeffschmitt-my.sharepoint.com/:x:/g/personal/cault_jeffdeals_com/IQAA3V45f8ASR4SrGn20P_PRAesPBeydzIPajYphoI1vT6k?e=6unMcF'
+        isPlaceholder: true,
+        placeholderNote: 'OneDrive: Missing Doc Submission 1.xlsx'
+      },
+      {
+        id: 'remote-sign-tool',
+        title: 'Remote Sign Tool',
+        category: 'Portals & Logins',
+        type: 'Portal',
+        desc: 'SignNow corporate portal for off-site customer digital signings.',
+        url: 'https://app.signnow.com/rctapp/login',
+        isPlaceholder: false
+      },
+      {
+        id: 'vision-menu-howto',
+        title: 'Vision Menu How-To',
+        category: 'Training & Videos',
+        type: 'Video',
+        desc: 'Walkthrough video training on menu presentation and deal flow structuring.',
+        // REPLACE_WITH_ONEDRIVE_LINK: OneDrive link to 'Vision full video January 2026.mp4'
+        url: 'https://jeffschmitt-my.sharepoint.com/:v:/g/personal/cault_jeffdeals_com/IQCObymQv0NqQKC5USQx7T8AAWKUAGU4QBdwYQe_9zz8D6k?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=qwzhHk',
+        isPlaceholder: true,
+        placeholderNote: 'OneDrive Video: Vision full video January 2026.mp4'
+      },
+      {
+        id: 'signnow-howto',
+        title: 'SignNow How-To',
+        category: 'Training & Videos',
+        type: 'Video',
+        desc: 'Step-by-step video training for preparing and sending remote e-sign packages.',
+        // REPLACE_WITH_ONEDRIVE_LINK: OneDrive link to 'How to use SignNow.mp4'
+        url: 'https://jeffschmitt-my.sharepoint.com/:v:/g/personal/cault_jeffdeals_com/IQBBgNbUeTGLQqzYIHwcamv1ASavs9s-dV22c-1t1pUbTUA?e=x26VBK',
+        isPlaceholder: true,
+        placeholderNote: 'OneDrive Video: How to use SignNow.mp4'
+      },
+      {
+        id: 'zero-down-lease',
+        title: '$0 Down Lease Setup',
+        category: 'Desk Job Aids & Guides',
+        type: 'PDF',
+        desc: 'Structuring guidance and calculation guidelines for zero-down lease programs.',
+        // REPLACE_WITH_ONEDRIVE_LINK: OneDrive link to '$0 down on leases email.pdf'
+        url: 'https://jeffschmitt-my.sharepoint.com/:b:/g/personal/cault_jeffdeals_com/IQB3-Zo5WmvVS565FH3I6oXyASdLvW9YEwEh2KJDYTnqdMI?e=6R0jks',
+        isPlaceholder: true,
+        placeholderNote: 'OneDrive PDF: $0 down on leases email.pdf'
+      },
+      {
+        id: 'gmf-lease-guide',
+        title: 'GMF Lease - Drac / Extra Miles',
+        category: 'Desk Job Aids & Guides',
+        type: 'PDF',
+        desc: 'Contracting specifications for GM Financial leases involving demo/DRAC and mileage.',
+        // REPLACE_WITH_ONEDRIVE_LINK: OneDrive link to 'Building and contracting a GMF Lease.pdf'
+        url: 'https://jeffschmitt-my.sharepoint.com/:b:/g/personal/cault_jeffdeals_com/IQCk4KTTnucRSJOlCwdsrLDcAfbJ0XZ-kOZ_vJrLcGQKHz4?e=4n01Hv',
+        isPlaceholder: true,
+        placeholderNote: 'OneDrive PDF: Building and contracting a GMF Lease.pdf'
+      },
+      {
+        id: 'vacation-request',
+        title: 'Vacation Request Form',
+        category: 'Team Admin & Tools',
+        type: 'Form',
+        desc: 'Submit planned PTO, time off, and coverage requests to F&I management.',
+        url: 'https://form.jotform.com/cault/jsaf-fi-vacation-request-form',
+        isPlaceholder: false
+      },
+      {
+        id: 'wire-info-letter',
+        title: 'Wire Info Letter',
+        category: 'Desk Job Aids & Guides',
+        type: 'PDF',
+        desc: 'Official bank wire instructions letter to hand to customer or banking institution.',
+        // REPLACE_WITH_ONEDRIVE_LINK: OneDrive link to 'WIRE LETTER.pdf'
+        url: 'https://jeffschmitt-my.sharepoint.com/:b:/g/personal/cault_jeffdeals_com/IQB23QC1NGx0So2gdTBFP_pdAXtxCmaF8Kao4Vw0luuhBT0?e=sN1SOL',
+        isPlaceholder: true,
+        placeholderNote: 'OneDrive PDF: WIRE LETTER.pdf'
+      },
+      {
+        id: 'deal-unwind-request',
+        title: 'Deal Unwind Request',
+        category: 'Operational Forms & Requests',
+        type: 'Form',
+        desc: 'Initiate an accounting unwind, trade return, or unwind checklist submission.',
+        // REPLACE_WITH_ONEDRIVE_LINK: OneDrive / MS Form link to 'Deal Unwind Request'
+        url: 'https://forms.cloud.microsoft/r/B6Fc5Ea0J4',
+        isPlaceholder: true,
+        placeholderNote: 'OneDrive Link: Deal Unwind Request'
+      },
+      {
+        id: 'incoming-wire-form',
+        title: 'Incoming Wire Form',
+        category: 'Operational Forms & Requests',
+        type: 'Form',
+        desc: 'Accounting notification to confirm incoming buyer wire transfers.',
+        // REPLACE_WITH_ONEDRIVE_LINK: OneDrive / Form link to 'Incoming Wire Transfer'
+        url: 'https://forms.cloud.microsoft/r/q94dNdNDWB',
+        isPlaceholder: true,
+        placeholderNote: 'OneDrive Link: Incoming Wire Transfer'
+      },
+      {
+        id: 'vsc-policy-deviation',
+        title: 'VSC Policy Deviation',
+        category: 'Operational Forms & Requests',
+        type: 'Form',
+        desc: 'Exception authorization request for service contract term, deductible, or pricing.',
+        // REPLACE_WITH_ONEDRIVE_LINK: OneDrive / Form link to 'VSC Policy Deviations'
+        url: '#',
+        isPlaceholder: true,
+        placeholderNote: 'OneDrive Link: VSC Policy Deviations'
+      },
+      {
+        id: 'treadwell-funding',
+        title: 'Treadwell Funding Links',
+        category: 'Desk Job Aids & Guides',
+        type: 'PDF',
+        desc: 'Lender funding directory and direct desk communication pathways.',
+        // REPLACE_WITH_ONEDRIVE_LINK: OneDrive PDF link to 'Treadwell Funding Links.pdf'
+        url: 'https://forms.cloud.microsoft/r/PCMUUhD9bB',
+        isPlaceholder: true,
+        placeholderNote: 'OneDrive PDF: Treadwell Funding Links.pdf'
+      },
+      {
+        id: 'maintenance-it-repair',
+        title: 'Maintenance / IT Repair Request',
+        category: 'Team Admin & Tools',
+        type: 'Portal',
+        desc: 'Facility work order and hardware IT ticket dispatch portal.',
+        url: 'https://www.maintenancecare.com/maintenancecare/portal/action/RequestAction/form/mcrequestpage?buildingkey=1293-P-178dbf04dbd-1098b&buildingid=2678&user=jsch0001',
+        isPlaceholder: false
+      },
+      {
+        id: 'temp-tag-link',
+        title: 'Temp Tag Link (Ohio BMV)',
+        category: 'Portals & Logins',
+        type: 'Portal',
+        desc: 'Ohio DPS / BMV dealer portal for temporary plate generation.',
+        url: 'https://services.dps.ohio.gov/IdentityManager/Login/Index/7fbf7e36-3e3a-4fce-93c0-ef5ad31a1d60?ReturnUrl=%2fDealers%2f',
+        isPlaceholder: false
+      },
+      {
+        id: 'credit-card-site',
+        title: 'CardPointe Merchant Portal',
+        category: 'Portals & Logins',
+        type: 'Portal',
+        desc: 'Virtual terminal and card authorization portal for down payments and deposits.',
+        url: 'https://accounts.cardconnect.com/auth/realms/cardconnect/protocol/openid-connect/auth?response_type=code&client_id=cardpointe&scope=openid&state=DtKwzA8FydOIvVfWwuQBCO3hnw2ZcpSOZuvs11Wk16g.vO_D7e6w81w.cardpointe_standard_prod&redirect_uri=https%3A%2F%2Fcardpointe.com%2F',
+        isPlaceholder: false
+      },
+      {
+        id: 'kenect',
+        title: 'Kenect Texting Platform',
+        category: 'Portals & Logins',
+        type: 'Portal',
+        desc: 'Two-way customer SMS messaging and review capture inbox.',
+        url: 'https://app.kenect.com/inbox',
+        isPlaceholder: false
+      },
+      {
+        id: 'jsag-forms-repo',
+        title: 'JSAG Forms Folder',
+        category: 'Operational Forms & Requests',
+        type: 'Folder/File',
+        desc: 'Master directory folder containing all standardized dealership F&I documents.',
+        // REPLACE_WITH_ONEDRIVE_LINK: Master OneDrive folder link to 'JSAG FORMS'
+        url: 'https://jeffschmitt-my.sharepoint.com/:f:/g/personal/cault_jeffdeals_com/IgAe3LjeKLxpRp9hqT7iy5BBAW5X_S3JspE_YgFl70EKkkU?e=IUVUgm',
+        isPlaceholder: true,
+        placeholderNote: 'OneDrive Folder: JSAG FORMS'
+      }
+    ];
+
+    const CATEGORIES = [
+      'All',
+      'Desk Job Aids & Guides',
+      'Operational Forms & Requests',
+      'Portals & Logins',
+      'Training & Videos',
+      'Team Admin & Tools'
+    ];
+
+    let currentCategory = 'All';
+    let searchQuery = '';
+    let filterFavoritesOnly = false;
+    let favorites = JSON.parse(localStorage.getItem('jsag_favs') || '[]');
+
+    // Type Badge Icon & Color Map
+    const TYPE_CONFIG = {
+      'Video': {
+        color: 'bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border-rose-200 dark:border-rose-900',
+        icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`
+      },
+      'PDF': {
+        color: 'bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300 border-red-200 dark:border-red-900',
+        icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>`
+      },
+      'Excel': {
+        color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-200 dark:border-emerald-900',
+        icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>`
+      },
+      'Portal': {
+        color: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 border-indigo-200 dark:border-indigo-900',
+        icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>`
+      },
+      'Form': {
+        color: 'bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-300 border-sky-200 dark:border-sky-900',
+        icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>`
+      },
+      'Web App': {
+        color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/60 dark:text-blue-300 border-blue-200 dark:border-blue-800',
+        icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>`
+      },
+      'Folder/File': {
+        color: 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-900',
+        icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>`
+      }
+    };
+
+    function renderCategoryPills() {
+      const container = document.getElementById('categoryPillsContainer');
+      container.innerHTML = CATEGORIES.map(cat => {
+        const isActive = currentCategory === cat;
+        return `
+          <button 
+            onclick="setCategory('${cat}')"
+            class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+              isActive 
+                ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/30' 
+                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
+            }"
+          >
+            ${cat}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderResources() {
+      const grid = document.getElementById('resourceGrid');
+      const emptyState = document.getElementById('emptyState');
+      const visibleCountEl = document.getElementById('visibleCount');
+      const totalCountEl = document.getElementById('totalCount');
+      const favCountBadge = document.getElementById('favCountBadge');
+
+      favCountBadge.innerText = favorites.length;
+      totalCountEl.innerText = RESOURCES.length;
+
+      const filtered = RESOURCES.filter(item => {
+        // Category filter
+        if (currentCategory !== 'All' && item.category !== currentCategory) {
+          return false;
+        }
+        // Favorite toggle
+        if (filterFavoritesOnly && !favorites.includes(item.id)) {
+          return false;
+        }
+        // Search query
+        if (searchQuery.trim() !== '') {
+          const q = searchQuery.toLowerCase();
+          const matchTitle = item.title.toLowerCase().includes(q);
+          const matchCat = item.category.toLowerCase().includes(q);
+          const matchDesc = item.desc.toLowerCase().includes(q);
+          const matchType = item.type.toLowerCase().includes(q);
+          return matchTitle || matchCat || matchDesc || matchType;
+        }
+        return true;
+      });
+
+      visibleCountEl.innerText = filtered.length;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      emptyState.classList.remove('flex');
+
+      grid.innerHTML = filtered.map(item => {
+        const typeCfg = TYPE_CONFIG[item.type] || {
+          color: 'bg-slate-100 text-slate-700 border-slate-200',
+          icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>`
+        };
+        const isStarred = favorites.includes(item.id);
+
+        return `
+          <div class="group relative flex flex-col justify-between bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200">
+            <div>
+              <!-- Top Row: Badge, Type & Star -->
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <!-- Type Pill -->
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold border ${typeCfg.color}">
+                    ${typeCfg.icon}
+                    ${item.type}
+                  </span>
+                </div>
+                
+                <!-- Favorite star button -->
+                <button 
+                  onclick="toggleFavorite('${item.id}', event)" 
+                  title="${isStarred ? 'Remove bookmark' : 'Bookmark this resource'}" 
+                  class="p-1.5 rounded-lg text-slate-400 hover:text-amber-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition"
+                >
+                  <svg class="w-5 h-5 ${isStarred ? 'text-amber-500 fill-amber-500' : 'stroke-current fill-transparent'}" viewBox="0 0 24 24" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Title -->
+              <h3 class="text-base font-bold text-slate-900 dark:text-white tracking-tight mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                ${item.title}
+              </h3>
+              
+              <!-- Category Sub-tag -->
+              <span class="inline-block text-[11px] font-medium text-slate-400 dark:text-slate-500 mb-2">
+                ${item.category}
+              </span>
+
+              <!-- Description -->
+              <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+                ${item.desc}
+              </p>
+
+              <!-- Notice for Placeholder Links -->
+              ${item.isPlaceholder ? `
+                <div class="mb-4 px-2.5 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/80 text-[11px] text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                  <span class="truncate">Add OneDrive link in code</span>
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- Card Action Footer -->
+            <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center gap-2">
+              <a 
+                href="${item.url}" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                onclick="${item.isPlaceholder ? "handlePlaceholderClick(event, '" + item.title + "')" : ''}"
+                class="flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition shadow-sm shadow-blue-500/20"
+              >
+                <span>Open Resource</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+              </a>
+
+              <button 
+                onclick="copyResourceLink('${item.url}', '${item.title}', event)" 
+                title="Copy Resource Link"
+                class="p-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function setCategory(cat) {
+      currentCategory = cat;
+      renderCategoryPills();
+      renderResources();
+    }
+
+    function handleSearch(val) {
+      searchQuery = val;
+      const clearBtn = document.getElementById('clearSearchBtn');
+      if (val.trim().length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+      renderResources();
+    }
+
+    function clearSearch() {
+      const input = document.getElementById('searchInput');
+      input.value = '';
+      searchQuery = '';
+      document.getElementById('clearSearchBtn').classList.add('hidden');
+      renderResources();
+      input.focus();
+    }
+
+    function resetFilters() {
+      currentCategory = 'All';
+      clearSearch();
+      filterFavoritesOnly = false;
+      updateFavoriteFilterUI();
+      renderCategoryPills();
+      renderResources();
+    }
+
+    function toggleFavoriteFilter() {
+      filterFavoritesOnly = !filterFavoritesOnly;
+      updateFavoriteFilterUI();
+      renderResources();
+    }
+
+    function updateFavoriteFilterUI() {
+      const btn = document.getElementById('favoriteFilterBtn');
+      const icon = document.getElementById('favFilterIcon');
+      if (filterFavoritesOnly) {
+        btn.classList.add('bg-amber-50', 'dark:bg-amber-950/50', 'border-amber-400');
+        icon.classList.remove('fill-transparent');
+        icon.classList.add('fill-amber-500');
+      } else {
+        btn.classList.remove('bg-amber-50', 'dark:bg-amber-950/50', 'border-amber-400');
+        icon.classList.remove('fill-amber-500');
+        icon.classList.add('fill-transparent');
+      }
+    }
+
+    function toggleFavorite(id, event) {
+      if (event) event.stopPropagation();
+      if (favorites.includes(id)) {
+        favorites = favorites.filter(favId => favId !== id);
+        showToast('Removed from Starred');
+      } else {
+        favorites.push(id);
+        showToast('Added to Starred');
+      }
+      localStorage.setItem('jsag_favs', JSON.stringify(favorites));
+      renderResources();
+    }
+
+    function handlePlaceholderClick(e, title) {
+      // Gentle notification for links still waiting on OneDrive paste
+      e.preventDefault();
+      showToast(`Replace '#' in code with OneDrive link for: ${title}`);
+      openModal('howToModal');
+    }
+
+    function copyResourceLink(url, title, event) {
+      if (event) event.stopPropagation();
+      if (url === '#' || !url) {
+        showToast(`Add OneDrive URL for ${title} first!`);
+        return;
+      }
+      // Safe fallback clipboard copy for iFrames/cross-domain
+      const tempInput = document.createElement('input');
+      tempInput.value = url;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      try {
+        document.execCommand('copy');
+        showToast(`Copied link for ${title}`);
+      } catch (err) {
+        showToast('Unable to copy to clipboard');
+      }
+      document.body.removeChild(tempInput);
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMessage');
+      toastMsg.innerText = message;
+      toast.classList.remove('opacity-0', 'translate-y-20');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      clearTimeout(window._toastTimeout);
+      window._toastTimeout = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-20');
+      }, 2500);
+    }
+
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.add('hidden');
+    }
+
+    // Dark Mode Support
+    function initTheme() {
+      const isDark = localStorage.getItem('theme') === 'dark' || 
+        (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('sunIcon').classList.remove('hidden');
+        document.getElementById('moonIcon').classList.add('hidden');
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.getElementById('sunIcon').classList.add('hidden');
+        document.getElementById('moonIcon').classList.remove('hidden');
+      }
+    }
+
+    function toggleDarkMode() {
+      const isCurrentlyDark = document.documentElement.classList.contains('dark');
+      if (isCurrentlyDark) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+        document.getElementById('sunIcon').classList.add('hidden');
+        document.getElementById('moonIcon').classList.remove('hidden');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+        document.getElementById('sunIcon').classList.remove('hidden');
+        document.getElementById('moonIcon').classList.add('hidden');
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      renderCategoryPills();
+      renderResources();
+      updateFavoriteFilterUI();
+
+      // Close modal when clicking outside of modal card
+      window.addEventListener('click', (e) => {
+        const modal = document.getElementById('howToModal');
+        if (e.target === modal) {
+          closeModal('howToModal');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
