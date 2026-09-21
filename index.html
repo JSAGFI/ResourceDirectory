@@ -723,14 +723,6 @@
       renderCategoryPills();
       renderResources();
       updateFavoriteFilterUI();
-
-      // Close modal when clicking outside of modal card
-      window.addEventListener('click', (e) => {
-        const modal = document.getElementById('howToModal');
-        if (e.target === modal) {
-          closeModal('howToModal');
-        }
-      });
     });
   </script>
 </body>
