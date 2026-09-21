@@ -74,13 +74,6 @@
             <span id="favCountBadge" class="ml-0.5 px-1.5 py-0.2 bg-slate-200 dark:bg-slate-700 rounded-full text-[10px]">0</span>
           </button>
 
-          <!-- Help / Admin Modal Trigger -->
-          <button onclick="openModal('howToModal')" title="How to edit or add links" class="p-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-          </button>
-
           <!-- Dark / Light Mode Toggle -->
           <button id="themeToggleBtn" onclick="toggleDarkMode()" title="Toggle Dark/Light Mode" class="p-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition">
             <svg id="sunIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -112,7 +105,7 @@
           F&amp;I Master Resource Directory
         </h2>
         <p class="text-slate-300 text-sm leading-relaxed mb-6">
-          Direct, authenticated access to deal aids, submission templates, internal portals, and video procedures. Bookmark your daily tools for instant one-click launch.
+          Direct access to job aids, submission templates, internal portals, and video procedures. Bookmark your daily tools for instant one-click launch.
         </p>
 
         <!-- Search Bar -->
@@ -183,57 +176,6 @@
     </div>
   </footer>
 
-  <div id="howToModal" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-8 space-y-5">
-      <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400 flex items-center justify-center font-bold">
-            i
-          </div>
-          <div>
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white">How to Maintain &amp; Update Links</h3>
-            <p class="text-xs text-slate-500">Zero database setup required &mdash; fully controlled in your repository</p>
-          </div>
-        </div>
-        <button onclick="closeModal('howToModal')" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
-      </div>
-
-      <div class="space-y-4 text-sm text-slate-600 dark:text-slate-300">
-        <div class="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200 text-xs">
-          <strong>OneDrive Link Notice:</strong> In this template, placeholders marked with <code>url: "#"</code> or commented with <code>// REPLACE_WITH_ONEDRIVE_LINK</code> are ready for your authentic company OneDrive sharing URLs.
-        </div>
-
-        <div>
-          <h4 class="font-bold text-slate-900 dark:text-white mb-1">1. How to update a link or add a new form:</h4>
-          <ol class="list-decimal list-inside space-y-1.5 text-xs sm:text-sm pl-1">
-            <li>Open this <code class="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">index.html</code> in GitHub.</li>
-            <li>Click the pencil icon (<strong class="text-blue-600">Edit</strong>).</li>
-            <li>Scroll down to the <code>const RESOURCES = [...]</code> array in the JavaScript section.</li>
-            <li>Paste your direct OneDrive sharing URL into the corresponding <code>url: "https://..."</code> property.</li>
-            <li>Commit changes. GitHub Pages automatically rebuilds and refreshes your site in ~30 seconds.</li>
-          </ol>
-        </div>
-
-        <div>
-          <h4 class="font-bold text-slate-900 dark:text-white mb-1">2. Best Practice for OneDrive Links:</h4>
-          <p class="text-xs text-slate-500 dark:text-slate-400">
-            In OneDrive, click <strong>Share &rarr; People in your organization with the link can view</strong>. This ensures users are prompted for company SSO without granting write/edit permissions to the original files.
-          </p>
-        </div>
-      </div>
-
-      <div class="pt-3 flex justify-end">
-        <button onclick="closeModal('howToModal')" class="px-5 py-2.5 bg-slate-900 dark:bg-blue-600 hover:bg-slate-800 dark:hover:bg-blue-700 text-white text-xs font-semibold rounded-xl transition">
-          Got it
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- Toast Notification -->
   <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xl text-xs font-semibold">
     <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -245,7 +187,6 @@
   <script>
     /**
      * JSAG F&I Resource Data Source
-     * Paste your actual OneDrive URLs in place of the '#' placeholders.
      */
     const RESOURCES = [
       {
@@ -253,7 +194,7 @@
         title: 'F&I Schedule',
         category: 'Team Admin & Tools',
         type: 'Web App',
-        desc: 'Current department schedule board.',
+        desc: 'Current department schedule board with quick access to PTO request and a printable calendar.',
         url: 'https://jsagfi.github.io/schedule/',
         isPlaceholder: false
       },
@@ -262,7 +203,7 @@
         title: 'Missing Docs List',
         category: 'Team Admin & Tools',
         type: 'Excel',
-        desc: 'Active tracking sheet for all missing docs.',
+        desc: 'Active tracking sheet for all missing docs.  Be sure to check regularly to avaoid penalites.',
         // REPLACE_WITH_ONEDRIVE_LINK: OneDrive link to 'Missing Doc Submission 1.xlsx'
         url: 'https://jeffschmitt-my.sharepoint.com/:x:/g/personal/cault_jeffdeals_com/IQAA3V45f8ASR4SrGn20P_PRAesPBeydzIPajYphoI1vT6k?e=6unMcF',
         isPlaceholder: false,
@@ -282,7 +223,7 @@
         title: 'Vision Menu How-To',
         category: 'Training & Videos',
         type: 'Video',
-        desc: 'Walkthrough video for Vision Menu function.',
+        desc: 'Walkthrough video for Vision Menu.',
         // REPLACE_WITH_ONEDRIVE_LINK: OneDrive link to 'Vision full video January 2026.mp4'
         url: 'https://jeffschmitt-my.sharepoint.com/:v:/g/personal/cault_jeffdeals_com/IQCObymQv0NqQKC5USQx7T8AAWKUAGU4QBdwYQe_9zz8D6k?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=qwzhHk',
         isPlaceholder: false,
@@ -312,12 +253,23 @@
       },
       {
         id: 'gmf-lease-guide',
-        title: 'GMF Lease - Drac / Extra Miles',
+        title: 'GM Financial Lease - Drac / Extra Miles',
         category: 'Desk Job Aids & Guides',
         type: 'PDF',
-        desc: 'Contracting specifications for GM Financial leases for vehicles non-standard mileage.',
+        desc: 'Contracting specifications for GM Financial leases for vehicles non-standard inception mileage/additional mileage.',
         // REPLACE_WITH_ONEDRIVE_LINK: OneDrive link to 'Building and contracting a GMF Lease.pdf'
         url: 'https://jeffschmitt-my.sharepoint.com/:b:/g/personal/cault_jeffdeals_com/IQCk4KTTnucRSJOlCwdsrLDcAfbJ0XZ-kOZ_vJrLcGQKHz4?e=4n01Hv',
+        isPlaceholder: false,
+        placeholderNote: 'OneDrive PDF: Building and contracting a GMF Lease.pdf'
+      },
+       {
+        id: 'maz-lease-guide',
+        title: 'Mazda Lease/RoutOne Chetsheet',
+        category: 'Desk Job Aids & Guides',
+        type: 'PDF',
+        desc: 'detailed instructions for Mazda Lease eContracting within RouteOne.',
+        // REPLACE_WITH_ONEDRIVE_LINK: OneDrive link to 'Building and contracting a GMF Lease.pdf'
+        url: 'https://jeffschmitt-my.sharepoint.com/:b:/g/personal/cault_jeffdeals_com/IQCIVdNQpeOdQLcANkGhZtGqAXj8PjSaY1lsWdUHoqisFkk?e=gAqVBw',
         isPlaceholder: false,
         placeholderNote: 'OneDrive PDF: Building and contracting a GMF Lease.pdf'
       },
@@ -335,7 +287,7 @@
         title: 'Wire Info Letter',
         category: 'Desk Job Aids & Guides',
         type: 'PDF',
-        desc: 'Official bank wire instructions letter to distribut when requested.',
+        desc: 'Official bank wire instruction letter to distribute when needed.',
         // REPLACE_WITH_ONEDRIVE_LINK: OneDrive link to 'WIRE LETTER.pdf'
         url: 'https://jeffschmitt-my.sharepoint.com/:b:/g/personal/cault_jeffdeals_com/IQB23QC1NGx0So2gdTBFP_pdAXtxCmaF8Kao4Vw0luuhBT0?e=sN1SOL',
         isPlaceholder: false,
@@ -357,7 +309,7 @@
         title: 'Incoming Wire Form',
         category: 'Operational Forms & Requests',
         type: 'Form',
-        desc: 'Accounting notification to confirm incoming wire transfers.',
+        desc: 'Accounting notification for incoming wire transfers.',
         // REPLACE_WITH_ONEDRIVE_LINK: OneDrive / Form link to 'Incoming Wire Transfer'
         url: 'https://forms.cloud.microsoft/r/q94dNdNDWB',
         isPlaceholder: false,
@@ -379,7 +331,7 @@
         title: 'Treadwell Funding Links',
         category: 'Desk Job Aids & Guides',
         type: 'PDF',
-        desc: 'Lender funding directory for each location.',
+        desc: 'Funding links for each location.',
         // REPLACE_WITH_ONEDRIVE_LINK: OneDrive PDF link to 'Treadwell Funding Links.pdf'
         url: 'https://forms.cloud.microsoft/r/PCMUUhD9bB',
         isPlaceholder: false,
@@ -426,7 +378,7 @@
         title: 'JSAG Forms Folder',
         category: 'Operational Forms & Requests',
         type: 'Folder/File',
-        desc: 'Master directory folder containing all standardized dealership documents.',
+        desc: 'Master directory folder containing many standardized dealership documents.',
         // REPLACE_WITH_ONEDRIVE_LINK: Master OneDrive folder link to 'JSAG FORMS'
         url: 'https://jeffschmitt-my.sharepoint.com/:f:/g/personal/cault_jeffdeals_com/IgAe3LjeKLxpRp9hqT7iy5BBAW5X_S3JspE_YgFl70EKkkU?e=IUVUgm',
         isPlaceholder: false,
@@ -735,16 +687,6 @@
         toast.classList.remove('opacity-100', 'translate-y-0');
         toast.classList.add('opacity-0', 'translate-y-20');
       }, 2500);
-    }
-
-    function openModal(id) {
-      const modal = document.getElementById(id);
-      if (modal) modal.classList.remove('hidden');
-    }
-
-    function closeModal(id) {
-      const modal = document.getElementById(id);
-      if (modal) modal.classList.add('hidden');
     }
 
     // Dark Mode Support
